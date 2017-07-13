@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/list_book_height"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/list_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:padding="8dp"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/title_size"
+            tools:text="Title of the Book" />
+
+        <TextView
+            android:id="@+id/list_authors"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:paddingLeft="8dp"
+            android:paddingTop="8dp"
+            tools:text="Jimmy Hendrix, Eric Clapton" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="130dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!--this one is empty for a nicer layout-->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/list_book_title_height" />
+
+        <TextView
+            android:id="@+id/list_price"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            tools:text="price: 250 CZK" />
+
+        <TextView
+            android:id="@+id/list_lang"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            tools:text="language: cs" />
+
+        <TextView
+            android:id="@+id/list_pages"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            tools:text="page count: " />
+
+    </LinearLayout>
+
+
+</LinearLayout>
