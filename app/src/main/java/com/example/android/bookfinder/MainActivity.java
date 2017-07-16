@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -33,16 +35,37 @@ public class MainActivity extends AppCompatActivity {
     // text view to display no results, when something goes wrong
     private TextView mEmptyStateTextView;
 
+    private EditText mSearch;
+
+    // show progress bar when loading images
+    private View mProgressBar;
+
+    private Button mGoButton;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // initialize a con mgr to get state of network
+        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+
+        final boolean networkOk = networkInfo != null && networkInfo.isConnectedOrConnecting();
+
+
         ListView booksListView = (ListView) findViewById(R.id.list);
+        mSearch = (EditText) findViewById(R.id.search);
+        mGoButton = (Button) findViewById(R.id.gobabygo);
+        mProgressBar = findViewById(R.id.loading_indicator);
 
         // empty view for no result line
         mEmptyStateTextView = (TextView) findViewById(R.id.empty_view);
         booksListView.setEmptyView(mEmptyStateTextView);
+
+        mEmptyStateTextView.setVisibility(View.GONE);
+        mProgressBar.setVisibility(View.GONE);
 
         // Create a new adapter that takes an empty list of books as input
         mAdapter = new BooksAdapter(this, new ArrayList<Books>());
@@ -60,14 +83,54 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // initialize a con mgr to get state of network
-        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+
+        final BookAsyncTask doStuff = new BookAsyncTask();
+
+        mGoButton.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (networkOk) {
+                    //build the url first - get data from edit text
+                    String userSearch = mSearch.getText().toString();
+                    doStuff.execute(API_URL + userSearch + LIMIT_RESULTS);
+                }
+                else{
+                    mEmptyStateTextView.setVisibility(View.VISIBLE);
+                    mEmptyStateTextView.setText(R.string.no_internet);
+                }
+            }
+        });
 
 
     }
 
     private class BookAsyncTask extends AsyncTask<String, Void, List<Books>> {
+        @Override
+        protected void onPreExecute() {
+            // show progress bar - must be here, not in a second thread
+            mProgressBar.setVisibility(View.VISIBLE);
+        }
 
+        // start doing the heavy lifting
+        @Override
+        protected List<Books> doInBackground(String... urls) {
+            return QueryUtils.getData(urls[0]);
+        }
+
+        @Override
+        protected void onPostExecute(List<Books> books) {
+            // get rid of progress bar
+            mProgressBar.setVisibility(View.GONE);
+
+            //deletes previous data
+            mAdapter.clear();
+
+            if (books != null) {
+                mAdapter.addAll(books);
+            } else {
+                mEmptyStateTextView.setVisibility(View.VISIBLE);
+                mEmptyStateTextView.setText(R.string.no_data);
+            }
+        }
     }
 }

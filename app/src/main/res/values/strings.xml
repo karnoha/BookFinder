@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Book Finder</string>
     <string name="search_button">GO</string>
-    <string name="edit_hint">Type book title here and press GO</string>
+    <string name="edit_hint">Type book title and press GO</string>
+    <string name="no_data">Ooops, something went wrong...</string>
+    <string name="no_internet">Not enough internets</string>
 </resources>
