@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -85,19 +86,20 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        final BookAsyncTask doStuff = new BookAsyncTask();
-
         Log.v(LOG_TAG, "log before reading text from edittext");
         mGoButton.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+
                 if (networkOk) {
                     //build the url first - get data from edit text
                     String userSearch = mSearch.getText().toString();
                     Log.v(LOG_TAG, "LOG - string usersearch: " + userSearch);
+                    BookAsyncTask doStuff = new BookAsyncTask();
                     doStuff.execute(API_URL + userSearch + LIMIT_RESULTS);
-                }
-                else{
+                } else {
                     mEmptyStateTextView.setVisibility(View.VISIBLE);
                     mEmptyStateTextView.setText(R.string.no_internet);
                 }
