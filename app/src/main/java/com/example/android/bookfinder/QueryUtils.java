@@ -131,33 +131,69 @@ public class QueryUtils {
                 //create an object from current (i( book
                 JSONObject currentBook = itemsArray.getJSONObject(i);
                 JSONObject volumeInfoObject = currentBook.getJSONObject("volumeInfo");
+                //////////////////title
                 String title = volumeInfoObject.getString("title");
 
+
+                //////////////////authors
                 // Books have often more then 1 author, therefore they're stored in an Array
                 // We need another loop and create a string with all authors on one line
-                // using a Stringbuilder
-                JSONArray authorsArray = volumeInfoObject.getJSONArray("authors");
+                // using a StringBuilder
+                JSONArray authorsArray;
                 StringBuilder authors = new StringBuilder();
-                for (int j = 0; j < authorsArray.length(); j++) {
-                    authors.append(authorsArray.getString(j));
-                    if (j < authorsArray.length()) {
-                        authors.append(", ");
+                if (volumeInfoObject.has("authors")) {
+                    authorsArray = volumeInfoObject.getJSONArray("authors");
+                    for (int j = 0; j < authorsArray.length(); j++) {
+                        authors.append(authorsArray.getString(j));
+                        if (j < authorsArray.length()) {
+                            authors.append(", ");
+                        }
                     }
+                } else {
+                    authors.append("No authors found");
                 }
 
+                ///////////////////pagecount
                 // extract pagecount, language and url from volumeInfo object
-                int pageCount = volumeInfoObject.getInt("pageCount");
-                String lang = volumeInfoObject.getString("language");
-                String url = volumeInfoObject.getString("infoLink");
+                int pageCount;
+                if (volumeInfoObject.has("pageCount")) {
+                    pageCount = volumeInfoObject.getInt("pageCount");
+                } else {
+                    pageCount = 0;
+                }
 
+                ///////////////////////language
+                String lang;
+                if (volumeInfoObject.has("language")) {
+                    lang = volumeInfoObject.getString("language");
+                } else {
+                    lang = "?";
+                }
+
+
+                //////////////////////url
+                String url = null;
+                if (volumeInfoObject.has("infoLink")) {
+                    url = volumeInfoObject.getString("infoLink");
+                }
+
+
+                //////////////////////price
                 // price is stored in another object. I chose listPrice, this is original price,
                 // retail price might not be with every book
                 JSONObject saleInfoObject = currentBook.getJSONObject("saleInfo");
-                JSONObject listPriceObject = saleInfoObject.getJSONObject("listPrice");
-                double amount = listPriceObject.getDouble("amount");
-                String currency = listPriceObject.getString("currencyCode");
-                // now just concatenate double amount and string currency together
-                String price = Double.toString(amount) + " " + currency;
+                String price;
+
+                if (saleInfoObject.has("listPrice")) {
+                    JSONObject listPriceObject = saleInfoObject.getJSONObject("listPrice");
+                    double amount = listPriceObject.getDouble("amount");
+                    String currency = listPriceObject.getString("currencyCode");
+                    // now just concatenate double amount and string currency together
+                    price = Double.toString(amount) + " " + currency;
+                } else {
+                    price = "no price";
+                }
+
 
                 Books booksObject = new Books(title, authors, pageCount, price, lang, url);
                 booksArrayList.add(booksObject);

@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -86,12 +87,14 @@ public class MainActivity extends AppCompatActivity {
 
         final BookAsyncTask doStuff = new BookAsyncTask();
 
+        Log.v(LOG_TAG, "log before reading text from edittext");
         mGoButton.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (networkOk) {
                     //build the url first - get data from edit text
                     String userSearch = mSearch.getText().toString();
+                    Log.v(LOG_TAG, "LOG - string usersearch: " + userSearch);
                     doStuff.execute(API_URL + userSearch + LIMIT_RESULTS);
                 }
                 else{

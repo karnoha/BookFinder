@@ -29,7 +29,7 @@
         android:layout_below="@id/search_bar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@drawable/divider_new"
+        android:divider="@drawable/divider"
         android:dividerHeight="20dp"
         android:orientation="vertical" />
 
