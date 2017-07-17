@@ -191,7 +191,7 @@ public class QueryUtils {
                     // now just concatenate double amount and string currency together
                     price = Double.toString(amount) + " " + currency;
                 } else {
-                    price = "no price";
+                    price = "price unknown";
                 }
 
 

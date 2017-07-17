@@ -44,10 +44,12 @@ public class BooksAdapter extends ArrayAdapter<Books> {
         priceView.setText(currentBook.getPrice());
 
         TextView langView = (TextView) listBookView.findViewById(R.id.list_lang);
-        langView.setText(currentBook.getLang());
+        langView.setText(R.string.language);
+        langView.append(currentBook.getLang());
 
         TextView pagesView = (TextView) listBookView.findViewById(R.id.list_pages);
-        pagesView.setText(currentBook.getPageCount());
+        pagesView.setText(R.string.page_count);
+        pagesView.append(currentBook.getPageCount());
 
         return listBookView;
     }
