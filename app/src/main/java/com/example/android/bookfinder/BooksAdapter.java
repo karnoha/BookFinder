@@ -17,7 +17,7 @@ import java.util.List;
 
 public class BooksAdapter extends ArrayAdapter<Books> {
 
-    public BooksAdapter(Context context, List<Books> books){
+    public BooksAdapter(Context context, List<Books> books) {
         super(context, 0, books);
     }
 
@@ -26,7 +26,7 @@ public class BooksAdapter extends ArrayAdapter<Books> {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
         View listBookView = convertView;
-        if (listBookView ==null){
+        if (listBookView == null) {
             listBookView = LayoutInflater.from(getContext()).inflate(
                     R.layout.list_book, parent, false);
         }

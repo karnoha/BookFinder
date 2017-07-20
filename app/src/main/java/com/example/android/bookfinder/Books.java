@@ -20,7 +20,7 @@ public class Books {
 
 
     //Constructor
-    public Books(String title, StringBuilder authors, int pageCount, String price, String lang, String url){
+    public Books(String title, StringBuilder authors, int pageCount, String price, String lang, String url) {
         mTitle = title;
         mAuthors = authors;
         mPageCount = pageCount;
@@ -30,13 +30,29 @@ public class Books {
     }
 
     // Getters
-    public String getTitle(){return mTitle;}
-    public StringBuilder getAuthors(){return mAuthors;}
-    public String getPageCount(){
+    public String getTitle() {
+        return mTitle;
+    }
+
+    public StringBuilder getAuthors() {
+        return mAuthors;
+    }
+
+    public String getPageCount() {
         String PageCountString = Integer.toString(mPageCount);
-        return PageCountString;}
-    public String getPrice(){return mPrice;}
-    public String getLang(){return mLang;}
-    public String getUrl(){return mUrl;}
+        return PageCountString;
+    }
+
+    public String getPrice() {
+        return mPrice;
+    }
+
+    public String getLang() {
+        return mLang;
+    }
+
+    public String getUrl() {
+        return mUrl;
+    }
 
 }

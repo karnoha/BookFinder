@@ -6,6 +6,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,7 +22,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Books>>{
 
     private static final String LOG_TAG = MainActivity.class.getName();
 
@@ -50,11 +52,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // initialize a con mgr to get state of network
-        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
-        final boolean networkOk = networkInfo != null && networkInfo.isConnectedOrConnecting();
 
 
         ListView booksListView = (ListView) findViewById(R.id.list);
@@ -90,10 +88,11 @@ public class MainActivity extends AppCompatActivity {
         mGoButton.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // hide keyboard
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-
-                if (networkOk) {
+                boolean netOK = checkNet();
+                if (netOK) {
                     //build the url first - get data from edit text
                     String userSearch = mSearch.getText().toString();
                     Log.v(LOG_TAG, "LOG - string usersearch: " + userSearch);
@@ -106,6 +105,32 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public boolean checkNet(){
+        // all function for search button were moved to this method from the oncreate method.
+        // Now we check if we loose an internet connection during app sessoin
+
+        // initialize a con mgr to get state of network
+        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+
+        final boolean networkOk = networkInfo != null && networkInfo.isConnectedOrConnecting();
+        return networkOk;
+    }
+
+    @Override
+    public Loader<List<Books>> onCreateLoader(int id, Bundle args) {
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<List<Books>> loader, List<Books> data) {
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<Books>> loader) {
 
     }
 
