@@ -23,7 +23,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements LoaderCallbacks<List<Books>> {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Books>> {
 
     private static final String LOG_TAG = MainActivity.class.getName();
 
@@ -49,8 +49,6 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
 
     private static final int BOOKS_LOADER_ID = 1;
 
-    LoaderManager loaderManager = getLoaderManager();
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,7 +73,6 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         booksListView.setAdapter(mAdapter);
 
 
-
         // set onclick listener on a view in layout and start web intent with book URL
         booksListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -87,28 +84,29 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
             }
         });
 
+        if (checkNet()){
+            LoaderManager loaderManager = getLoaderManager();
+            loaderManager.initLoader(BOOKS_LOADER_ID, null, MainActivity.this);
+        }
+
+
         mGoButton.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                buttonClicked();
+                // hide keyboard
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                boolean netOK = checkNet();
+                if (netOK) {
+                    getLoaderManager().restartLoader(BOOKS_LOADER_ID, null, MainActivity.this);
+                } else {
+                    mEmptyStateTextView.setVisibility(View.VISIBLE);
+                    mEmptyStateTextView.setText(R.string.no_internet);
+                }
             }
         });
-
     }
 
-    public void buttonClicked(){
-        // hide keyboard
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-        boolean netOK = checkNet();
-        if (netOK) {
-
-            loaderManager.initLoader(BOOKS_LOADER_ID, null, MainActivity.this);
-        } else {
-            mEmptyStateTextView.setVisibility(View.VISIBLE);
-            mEmptyStateTextView.setText(R.string.no_internet);
-        }
-    }
 
     public boolean checkNet() {
         // all function for search button were moved to this method from the oncreate method.
